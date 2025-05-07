@@ -68,12 +68,16 @@ func GenerateContainerID() string {
 }
 
 func randStringBytes(n int) string {
-	letterBytes := "1234567890"
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
-	}
-	return string(b)
+    letterBytes := "1234567890"
+	
+    // 初始化随机数生成器
+    rand.Seed(time.Now().UnixNano())
+
+    b := make([]byte, n)
+    for i := range b {
+        b[i] = letterBytes[rand.Intn(len(letterBytes))]
+    }
+    return string(b)
 }
 
 // GetLogfile build logfile name by containerId
