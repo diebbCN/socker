@@ -15,8 +15,8 @@ import (
 var runCommand = cli.Command{
 	Name: "run",
 	Usage: `Create a container with namespace and cgroups limit
-			mydocker run -it [command]
-			mydocker run -d -name [containerName] [imageName] [command]`,
+			socger run -it [command]
+			socger run -d -name [containerName] [imageName] [command]`,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "it", // 简单起见，这里把 -i 和 -t 参数合并成一个
@@ -49,7 +49,7 @@ var runCommand = cli.Command{
 		},
 		cli.StringSliceFlag{
 			Name:  "e",
-			Usage: "set environment,e.g. -e name=mydocker",
+			Usage: "set environment,e.g. -e name=socger",
 		},
 		cli.StringFlag{
 			Name:  "net",
@@ -119,7 +119,7 @@ var initCommand = cli.Command{
 
 var commitCommand = cli.Command{
 	Name:  "commit",
-	Usage: "commit container to image,e.g. mydocker commit 123456789 myimage",
+	Usage: "commit container to image,e.g. socger commit 123456789 myimage",
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 2 {
 			return fmt.Errorf("missing container name and image name")
@@ -154,14 +154,14 @@ var logCommand = cli.Command{
 
 var execCommand = cli.Command{
 	Name:  "exec",
-	Usage: "exec a command into container,mydocker exec 123456789 /bin/sh",
+	Usage: "exec a command into container,socger exec 123456789 /bin/sh",
 	Action: func(context *cli.Context) error {
 		// 如果环境变量存在，说明C代码已经运行过了，即setns系统调用已经执行了，这里就直接返回，避免重复执行
 		if os.Getenv(EnvExecPid) != "" {
 			log.Infof("pid callback pid %v", os.Getgid())
 			return nil
 		}
-		// 格式：mydocker exec 容器名字 命令，因此至少会有两个参数
+		// 格式：socger exec 容器名字 命令，因此至少会有两个参数
 		if len(context.Args()) < 2 {
 			return fmt.Errorf("missing container name or command")
 		}
@@ -175,9 +175,9 @@ var execCommand = cli.Command{
 
 var stopCommand = cli.Command{
 	Name:  "stop",
-	Usage: "stop a container,e.g. mydocker stop 1234567890",
+	Usage: "stop a container,e.g. socger stop 1234567890",
 	Action: func(context *cli.Context) error {
-		// 期望输入是：mydocker stop 容器Id，如果没有指定参数直接打印错误
+		// 期望输入是：socger stop 容器Id，如果没有指定参数直接打印错误
 		if len(context.Args()) < 1 {
 			return fmt.Errorf("missing container id")
 		}
@@ -189,7 +189,7 @@ var stopCommand = cli.Command{
 
 var removeCommand = cli.Command{
 	Name:  "rm",
-	Usage: "remove unused containers,e.g. mydocker rm 1234567890",
+	Usage: "remove unused containers,e.g. socger rm 1234567890",
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "f", // 强制删除
