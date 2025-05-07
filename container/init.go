@@ -25,7 +25,12 @@ func RunContainerInitProcess() error {
 	if len(cmdArray) == 0 {
 		return errors.New("run container get user command error, cmdArray is nil")
 	}
-
+	
+        // 修改容器主机名
+        if err := syscall.Sethostname([]byte("container")); err != nil{
+                log.Errorf("set container hostname error %v", err)
+        }
+	
 	// 挂载文件系统
 	setUpMount()
 
